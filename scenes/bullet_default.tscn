@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3 uid="uid://ckbr08kishgn8"]
+
+[ext_resource type="Script" path="res://scripts/Bullet_Default.gd" id="1_is8tp"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_mwubw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8hpv6"]
+albedo_color = Color(1, 0.223529, 0.172549, 1)
+emission_enabled = true
+emission = Color(0.847059, 0.662745, 0.0980392, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oqmmw"]
+albedo_color = Color(0, 0.886275, 0.513726, 1)
+emission_enabled = true
+emission = Color(0.666667, 0.690196, 0, 1)
+emission_energy_multiplier = 8.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tb6ej"]
+direction = Vector3(0, 0, 1)
+initial_velocity_min = 3.0
+initial_velocity_max = 5.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_qp8dp"]
+size = Vector3(0.04, 0.04, 0.04)
+
+[node name="Bullet_Default" type="Node3D"]
+script = ExtResource("1_is8tp")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.2, 0, 0, 0, -8.74228e-09, -0.2, 0, 0.2, -8.74228e-09, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_mwubw")
+surface_material_override/0 = SubResource("StandardMaterial3D_8hpv6")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.20264)
+target_position = Vector3(0, 0, -0.5)
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0282053)
+material_override = SubResource("StandardMaterial3D_oqmmw")
+emitting = false
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_tb6ej")
+draw_pass_1 = SubResource("BoxMesh_qp8dp")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
